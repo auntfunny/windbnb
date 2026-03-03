@@ -169,3 +169,30 @@ export const stays = [
         "photo": "https://images.unsplash.com/photo-1523755231516-e43fd2e8dca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1275&q=80"
     }
 ]
+
+
+// Create List of cities with country available from stays list
+export const cityList = [];
+for (let stay of stays) {
+  if (cityList.length === 0) {
+    let newLocation = {
+      city: stay.city,
+      country: stay.country,
+    };
+    cityList.push(newLocation);
+  } else {
+    let duplicate = 0;
+    for (let location of cityList) {
+      if (stay.city === location.city) {
+        duplicate = 1;
+      }
+    }
+    if(!duplicate){
+      let newLocation = {
+        city: stay.city,
+        country: stay.country
+      }
+      cityList.push(newLocation);
+    }
+  }
+}

@@ -22,12 +22,6 @@ const search = document.querySelector("#search");
 const guestBox = document.querySelector("#guestBox");
 export const location = document.querySelector("#location");
 
-export const cityList = [];
-for (let stay of stays) {
-  if (!cityList.includes(stay.city)) {
-    cityList.push(stay.city);
-  }
-}
 
 search.addEventListener("click", manageClick);
 searchOpen.addEventListener("click", openSearchMenu);

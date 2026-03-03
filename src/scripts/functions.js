@@ -1,6 +1,6 @@
-import { stays } from "./stays.js";
+import { stays, cityList } from "./stays.js";
 
-import { cityList, location } from "./main.js";
+import { location } from "./main.js";
 
 const staysList = document.querySelector("#staysList");
 const staysCount = document.querySelector("#staysCount");
@@ -19,6 +19,13 @@ const titleGuests = document.querySelector("#titleGuests");
             LOAD LIST
 
 ******************************************************************************/
+
+/**
+ * Function: loadList
+ * Purpose: Resets stay list, then creates and loads each stay in the list
+ * @param {array} stays - List of Stays available
+ * @returns {null}
+ */
 
 export function loadList(stays) {
   staysList.innerHTML = ``;
@@ -88,8 +95,8 @@ export function loadList(stays) {
             `;
     }
     staysList.appendChild(newStay);
-    staysCount.innerHTML = `${staysList.children.length} stays`;
   }
+  staysCount.innerHTML = `${staysList.children.length} stays`;
 }
 
 /******************************************************************************
@@ -97,6 +104,13 @@ export function loadList(stays) {
             SEARCH MENU
 
 ******************************************************************************/
+
+/**
+ * Function: openSearchMenu
+ * Purpose: Opens search, and positions focus depending on click target
+ * @param {event} event
+ * @returns {null}
+ */
 
 export function openSearchMenu(event) {
   search.classList.remove("hidden");
@@ -108,27 +122,70 @@ export function openSearchMenu(event) {
   }
 }
 
+/**
+ * Function: closeSearchMenu
+ * Purpose: Close menu
+ * @param {null}
+ * @returns {null}
+ */
+
 export function closeSearchMenu() {
   search.classList.add("hidden");
 }
+
+/**
+ * Function: activateGuest
+ * Purpose: Focuses on guest box and shows counters
+ * @param {null}
+ * @returns {null}
+ */
 
 export function activateGuest() {
   guestBox.classList.add("inset-ring-1", "inset-ring-accRed");
   guestCounters.classList.remove("hidden");
 }
 
+/**
+ * Function: deactivateGuest
+ * Purpose: Removes focus on guest box and hides counters
+ * @param {null}
+ * @returns {null}
+ */
+
 export function deactivateGuest() {
   guestBox.classList.remove("inset-ring-1", "inset-ring-accRed");
   guestCounters.classList.add("hidden");
 }
 
+/**
+ * Function: activateLocation
+ * Purpose: Shows search options
+ * @param {null}
+ * @returns {null}
+ */
+
 export function activateLocation() {
   searchList.classList.remove("hidden");
 }
 
+/**
+ * Function: deactivateLocation
+ * Purpose: hides search options
+ * @param {null}
+ * @returns {null}
+ */
+
 export function deactivateLocation() {
   searchList.classList.add("hidden");
 }
+
+/**
+ * Function: manageClick
+ * Purpose: Manages clicks when search is open according to click target and
+                current state
+ * @param {event} event
+ * @returns {null}
+ */
 
 export function manageClick(event) {
   const close = event.target.closest("aside");
@@ -155,6 +212,13 @@ export function manageClick(event) {
 
 ******************************************************************************/
 
+/**
+ * Function: countAdults
+ * Purpose: Adds or subtracts from adults and total depending on click target
+ * @param {event} event
+ * @returns {null}
+ */
+
 export function countAdults(event) {
   const current = event.target;
   let adults = Number(adultTotal.textContent);
@@ -168,6 +232,13 @@ export function countAdults(event) {
   updateGuestNumber(total);
   filterGuests(total);
 }
+
+/**
+ * Function: countChildren
+ * Purpose: Adds or subtracts from children and total depending on click target
+ * @param {event} event
+ * @returns {null}
+ */
 
 export function countChildren(event) {
   const current = event.target;
@@ -183,15 +254,39 @@ export function countChildren(event) {
   filterGuests(total);
 }
 
+/**
+ * Function: filterGuests
+ * Purpose: creates a new array to load depending on guest count and accounts
+              for location if available
+ * @param {number} total number of total guests
+ * @returns {null}
+ */
+
 export function filterGuests(total) {
   let newStays = stays.filter((stay) => stay.maxGuests >= total);
   if (location.value) {
-    newStays = newStays.filter((stay) =>
-      stay.city.toLowerCase().includes(location.value.toLowerCase()),
-    );
+    let citySearch = location.value;
+    if (citySearch.includes(",")) {
+      let comma = citySearch.indexOf(",");
+      citySearch = citySearch.slice(0, comma);
+    }
+    if ("finland".slice(0, citySearch.length) === citySearch.toLowerCase()) {
+      newStays = [...newStays];
+    } else {
+      newStays = newStays.filter((stay) =>
+        stay.city.toLowerCase().includes(citySearch.toLowerCase()),
+      );
+    }
   }
   loadList(newStays);
 }
+
+/**
+ * Function: updateGuestNumber
+ * Purpose: Changes open search button text depending on guest ammount
+ * @param {number} total number of total guests
+ * @returns {null}
+ */
 
 function updateGuestNumber(total) {
   if (total) {
@@ -211,38 +306,89 @@ function updateGuestNumber(total) {
 
 ******************************************************************************/
 
+/**
+ * Function: searchLocation
+ * Purpose: Changes input to only city if country is added, then updates
+              content according to search and filters
+ * @param {null}
+ * @returns {null}
+ */
+
 export function searchLocation() {
-  const citySearch = location.value;
-  addLocation.textContent = citySearch;
-  addLocation.classList.add("text-accGray");
-  if (cityList.includes(citySearch)) {
-    titleCity.textContent = `${citySearch}, `;
-  } else {
-    titleCity.textContent = ``;
+  let citySearch = location.value;
+  if (citySearch.includes(",")) {
+    let comma = citySearch.indexOf(",");
+    citySearch = citySearch.slice(0, comma);
   }
+  addLocation.textContent = location.value;
+  addLocation.classList.add("text-accGray");
   if (!citySearch) {
     addLocation.textContent = "Add location";
     addLocation.classList.remove("text-accGray");
   }
 
-  changeSearchList(citySearch);
+  let cityMatch = changeSearchList(citySearch);
+  updateTitle(citySearch, cityMatch);
   filterCity(citySearch);
 }
 
-export function filterCity(city) {
-  const total = Number(guestTotal.textContent.slice(0, 1));
-  let newStays = stays.filter((stay) =>
-    stay.city.toLowerCase().includes(city.toLowerCase()),
-  );
+/**
+ * Function: updateTitle
+ * Purpose: compares to available cities, and if it matches, the title is
+              updated with city and country
+ * @param {string, array} place, match search value inputed by user
+ * @returns {null}
+ */
+
+function updateTitle(place, match) {
+  if (place) {
+    if(match.length === 1){
+      titleCity.textContent = `${match[0].city}, ${match[0].country}`;
+    } else if (match.length === 2) {
+      titleCity.textContent = `${match[0].city} and ${match[1].city}`;
+    } else {
+      titleCity.textContent = `Finland`;
+    }
+  } else {
+    titleCity.textContent = `Finland`;
+  }
+}
+
+/**
+ * Function: filterCity
+ * Purpose: creates a new array according to user search, accounting for
+              guests if available
+ * @param {string} place search value inputed by user
+ * @returns {null}
+ */
+
+export function filterCity(place) {
+  const spaceIndex = guestTotal.textContent.indexOf(" ");
+  const total = Number(guestTotal.textContent.slice(0, spaceIndex));
+  let newStays = [];
+  if ("finland".slice(0, place.length) === place.toLowerCase()) {
+    newStays = [...stays];
+  } else {
+    newStays = stays.filter((stay) =>
+      stay.city.toLowerCase().includes(place.toLowerCase()),
+    );
+  }
   if (total) {
     newStays = newStays.filter((stay) => stay.maxGuests >= total);
   }
   loadList(newStays);
 }
 
-export function changeSearchList(locate) {
-  let cityMatch = cityList.filter((city) =>
-    city.toLowerCase().includes(locate.toLowerCase()),
+/**
+ * Function: changeSearchList
+ * Purpose: Updates search list options according to input
+ * @param {string} place search value inputed by user
+ * @returns {array} all matching cities
+ */
+
+export function changeSearchList(place) {
+  let cityMatch = cityList.filter((element) =>
+    element.city.toLowerCase().includes(place.toLowerCase()),
   );
   searchList.innerHTML = ``;
   for (let i = 0; i < 3 && i < cityMatch.length; i++) {
@@ -267,13 +413,21 @@ export function changeSearchList(locate) {
                     d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
                   />
                 </svg>
-                <span class="text-gray-500 hover:text-accGray">${cityMatch[i]}</span>
+                <span class="text-gray-500 hover:text-accGray">${cityMatch[i].city}, ${cityMatch[i].country}</span>
               </li>`;
   }
+  return cityMatch;
 }
 
-export function autofillCity(city) {
-  const cityName = city.children[1].textContent;
-  location.value = cityName;
+/**
+ * Function: autofillCity
+ * Purpose: Takes clicked option and inputs in location field, then searches
+ * @param {string} place clicked element within city filter options
+ * @returns {null}
+ */
+
+export function autofillCity(place) {
+  const cityName = place.children[1].textContent;
+  location.value = `${cityName}`;
   searchLocation();
 }
