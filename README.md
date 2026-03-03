@@ -1,10 +1,10 @@
-# windbnb Project [Link](https://www.example.com)
+# windbnb Project [Link](https://windbnb-sandy.vercel.app/)
 
 Final project for Funval Front-end web development level 1
 
 ## Description
 
-A more detailed description of the project, what it solves, and its key features.
+Sample page based on Airbnb, using a list of stays centered in Finland. The options are created dynamically and can filtered using the deployable search area, by city and by guests, showing only the stays that align with both. The amount of stays filtered is shown on the main page.
 
 ## Changes
 
@@ -19,3 +19,9 @@ A more detailed description of the project, what it solves, and its key features
 ## Screenshot
 
 ![](./src/images/screenshot.png)
+
+## Author
+
+- Website - [Anthony Black](https://anthonyblack.vercel.app/index.html)
+- Frontend Mentor - [@auntfunny](https://www.frontendmentor.io/profile/auntfunny)
+- GitHub - [@auntfunny](https://github.com/auntfunny)
