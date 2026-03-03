@@ -23,5 +23,4 @@ Sample page based on Airbnb, using a list of stays centered in Finland. The opti
 ## Author
 
 - Website - [Anthony Black](https://anthonyblack.vercel.app/index.html)
-- Frontend Mentor - [@auntfunny](https://www.frontendmentor.io/profile/auntfunny)
 - GitHub - [@auntfunny](https://github.com/auntfunny)
