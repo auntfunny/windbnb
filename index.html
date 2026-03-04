@@ -16,14 +16,14 @@
   </head>
   <body class="flex flex-col w-full items-center font-poppins">
     <!-- Deployable Search Menu -->
-    <div id="search" class="hidden fixed z-100 bg-[#00000081] w-full h-full">
+    <div id="search" class="opacity-0 invisible fixed z-100 bg-[#00000081] w-full h-full">
       <!-- Menu Body -->
-      <aside
-        class="relative flex flex-col items-center gap-2 p-3 w-full h-150 md:h-120 bg-white"
+      <aside id="searchBody"
+        class="overflow-hidden max-h-0 relative flex flex-col items-center gap-2 w-full h-120 bg-white transition-all duration-500 ease-in-out"
       >
         <!-- Heading and Exit -->
         <div
-          class="flex justify-between items-center w-full p-2 md:px-6 md:pt-4 lg:px-8 lg:pt-6"
+          class="flex justify-between items-center w-full p-5 md:px-9 md:pt-7 lg:px-11 lg:pt-9"
         >
           <p class="font-semibold text-xs md:text-sm lg:text-base">
             Edit Your Search

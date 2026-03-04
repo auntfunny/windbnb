@@ -13,6 +13,7 @@ Sample page based on Airbnb, using a list of stays centered in Finland. The opti
 - When the search option is incomplete, but only corresponds to one city, that city is shown in the title
 - When the search option is incomplete, and two cities are possible, both are shown in the title
 - When "Finland" is searched, all stays are shown
+- Search menu slides in from top, and slides up when closed
 
 
 ## Screenshot

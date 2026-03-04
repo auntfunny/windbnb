@@ -33,5 +33,8 @@ location.addEventListener("click", activateLocation);
 adultCount.addEventListener("click", countAdults);
 childrenCount.addEventListener("click", countChildren);
 location.addEventListener("input", searchLocation);
+location.addEventListener('focus', e => e.target.select());
+location.addEventListener('mouseup', e => e.preventDefault());
+
 
 loadList(stays);

@@ -13,6 +13,7 @@ const addGuests = document.querySelector("#addGuests");
 const guestCounters = document.querySelector("#guestCounters");
 const titleCity = document.querySelector("#titleCity");
 const titleGuests = document.querySelector("#titleGuests");
+const searchBody = document.querySelector("#searchBody");
 
 /******************************************************************************
 
@@ -107,16 +108,22 @@ export function loadList(stays) {
 
 /**
  * Function: openSearchMenu
- * Purpose: Opens search, and positions focus depending on click target
+ * Purpose: Opens search, accordian from top, and positions focus depending on click target
  * @param {event} event
  * @returns {null}
  */
 
 export function openSearchMenu(event) {
-  search.classList.remove("hidden");
+  search.classList.remove("opacity-0");
+  search.classList.remove("invisible");
+  search.classList.add("opacity-100");
+  searchBody.classList.remove("max-h-0");
+  searchBody.classList.add("max-h-full");
   if (event.target.closest("#addLocation")) {
-    location.focus();
     activateLocation();
+    setTimeout(() => {
+      location.focus();
+    }, 150);
   } else if (event.target.closest("#addGuests")) {
     activateGuest();
   }
@@ -130,7 +137,13 @@ export function openSearchMenu(event) {
  */
 
 export function closeSearchMenu() {
-  search.classList.add("hidden");
+  searchBody.classList.remove("max-h-full");
+  searchBody.classList.add("max-h-0");
+  setTimeout(() =>{
+    search.classList.remove("opacity-100");
+    search.classList.add("opacity-0");
+    search.classList.add("invisible");
+  }, 500);
 }
 
 /**
@@ -342,7 +355,7 @@ export function searchLocation() {
 
 function updateTitle(place, match) {
   if (place) {
-    if(match.length === 1){
+    if (match.length === 1) {
       titleCity.textContent = `${match[0].city}, ${match[0].country}`;
     } else if (match.length === 2) {
       titleCity.textContent = `${match[0].city} and ${match[1].city}`;
