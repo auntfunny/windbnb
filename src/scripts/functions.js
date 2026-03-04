@@ -97,7 +97,7 @@ export function loadList(stays) {
     }
     staysList.appendChild(newStay);
   }
-  staysCount.innerHTML = `${staysList.children.length} stays`;
+  staysCount.innerHTML = `${staysList.children.length}${staysList.children.length !== 1 ? ` stays` : ` stay`}`;
 }
 
 /******************************************************************************
